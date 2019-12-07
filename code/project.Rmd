@@ -1,0 +1,27 @@
+---
+title: "BDA - Project"
+author: "Anonymous"
+output: 
+  pdf_document: 
+    toc: yes
+    toc_depth: 1
+---
+
+```{r setup, include=FALSE}
+# This chunk just sets echo = TRUE as default (i.e. print all code)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=TRUE, include=FALSE}
+# To install aaltobda, see the General information in the assignment.
+library(aaltobda)
+data("bioassay")
+library(rstan)
+```
+
+
+# Title
+
+```{r}
+library(rstan)
+```
