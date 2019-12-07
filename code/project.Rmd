@@ -17,7 +17,9 @@ library(rstan)
 ```
 
 
-# Title
+# Analysis of survival chance relating to size of the maligant melanoma tumor size
+
+This project analyses the chance to survive maligant melanoma with the thickness of melanoma tumor size. The data is a dataset collected at the Department of Plastic Surgery, University Hospital of Odense, Denmark from 1962 to 1977. Each patient had their tumour removed with surgical operation, with around 2,5cm of the surrounding skin. The dataset contains the survival time of each patient after the surgery, information about the patient (survived/died, sex, age), year of the operation, thickness of the tumour and if there were ulcers present in the tumour. The patients were followed to the end of 1977.
 
 ```{r}
 csv <- read.csv("../data/Melanoma.csv", header=TRUE)
