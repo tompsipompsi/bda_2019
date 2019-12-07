@@ -13,9 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, echo=TRUE, include=FALSE}
-# To install aaltobda, see the General information in the assignment.
-library(aaltobda)
-data("bioassay")
 library(rstan)
 ```
 
@@ -23,5 +20,6 @@ library(rstan)
 # Title
 
 ```{r}
-library(rstan)
+csv <- read.csv("../data/Melanoma.csv", header=TRUE)
+df <- as.data.frame(csv)
 ```
