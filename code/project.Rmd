@@ -210,11 +210,8 @@ As can be seen from the beta, the expected probability of survival from melanoma
 
 ### Posterior predictive checks
 
-Posterior predictive checks:
-```{r}
-ypred <- posterior_predict(fit_bernoulli, newdata = data.frame(status = 1))
-mcmc_hist(ypred) + xlab('avg-temperature prediction for the summer 2016')
-```
+In the figure above is plotted density of ypred, which was predicted with the xpred = 16.
+16 in the top end of the 
 
 
 ## Comparison of models
