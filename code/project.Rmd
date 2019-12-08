@@ -144,7 +144,7 @@ stan_dens(fit_linear)
 
 ### Posterior predictive checks
 
-In the figure above is plotted density of ypred where is the distribution of possible tumour sizes when the predicted survival time is 2000 days. The expected tumour size is about three centimeters.
+In the figure above is plotted density of ypred where is the distribution of possible tumour sizes when the predicted survival time is 2000 days. The expected tumour size is about three centimeters, which is very close to the mean of tumour sizes.
 
 
 ## Bernoulli model
