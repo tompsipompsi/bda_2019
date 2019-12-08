@@ -27,8 +27,12 @@ SEED <- 48927 # set random seed for reproducability
 
 # Analysis of survival chance relating to size of the maligant melanoma tumor size
 
+## Introduction
 This project analyses the chance to survive maligant melanoma with the thickness of melanoma tumor size. The data is a dataset collected at the Department of Plastic Surgery, University Hospital of Odense, Denmark from 1962 to 1977. Each patient had their tumour removed with surgical operation, with around 2,5cm of the surrounding skin. The dataset contains the survival time of each patient after the surgery, information about the patient (survived/died, sex, age), year of the operation, thickness of the tumour and if there were ulcers present in the tumour. The patients were followed to the end of 1977.
 
+## Analysis
+
+Read data.
 ```{r}
 csv <- read.csv("../data/Melanoma.csv", header=TRUE)
 data_melanoma <- as.data.frame(csv)
@@ -52,35 +56,66 @@ print(fit_melanoma)
 
 
 ## Bernoulli model
+Purpose of this model is to get information and predict the survival chance from melanoma, when the tumour thickness is known.
 
+Clean data, 1 represents individuals that died because of melanoma, 0 represents individuals that are alive or died from other causes.
 ```{r}
-# 0 = dead, 1 = alive or died from other causes
-data_melanoma[data_melanoma$status == 1,]$status <- 0
-data_melanoma[data_melanoma$status == 2,]$status <- 1
-data_melanoma[data_melanoma$status == 3,]$status <- 1
+data_melanoma[data_melanoma$status == 2,]$status <- 0
+data_melanoma[data_melanoma$status == 3,]$status <- 0
 ```
 
+Weakly informative priors were chosen for alpha and beta, both are normal(0, 10). The selected prior represents the thickness pretty well.
+```{r}
+writeLines(readLines("bernoulli.stan"))
+```
+
+Create input list and run the stan model.
 ```{r}
 input_bernoulli <- list(N = nrow(data_melanoma),
                         x = data_melanoma$thickness,
                         y = data_melanoma$status)
-fit_bernoulli <- stan(file='bernoulli.stan', data=input_bernoulli, seed=SEED)
+fit_bernoulli <- stan(file='bernoulli.stan', data=input_bernoulli, seed=SEED, iter=5000, warmup=500)
 print(fit_bernoulli)
 ```
 
+
+Check converge of chains:
 ```{r}
-#monitor(fit_bernoulli, probs = c(0.1, 0.5, .9))
-draws <- as.data.frame(fit_bernoulli)
-mcmc_hist(draws, pars='alpha')
+rstan::traceplot(fit_bernoulli, pars=c('alpha','beta'))
+```
+
+Chains seems to be pretty well converged.
+
+
+HMC diagnostics:
+```{r}
+check_hmc_diagnostics(fit_bernoulli)
 ```
 
 
+Rhat diagnostics:
+```{r}
+rhat(fit_bernoulli)
+```
+
+Rhats are very close to one, so the chains are well converged.
 
 
+From monitor -function we can see the effective sample sizes (ESS -values).
+```{r}
+monitor(fit_bernoulli)
+```
 
 
+Plot posterior densities:
+```{r}
+stan_dens(fit_bernoulli)
+```
+
+As can be seen from the beta, the expected probability of survival from melanoma is approximately 0.8 (chance of death is 0.2). It is dependant from the thickness of the tumour.
 
 
+## Conclusion
 
 
 

@@ -11,5 +11,8 @@ parameters {
 }
 
 model {
-  y ~ bernoulli_logit(alpha + beta * x);
+  alpha ~ normal(0, 10);
+  beta ~ normal(0, 10);
+  for (n in 1:N)
+    y[n] ~ bernoulli_logit(alpha + beta * x[n]);
 }
