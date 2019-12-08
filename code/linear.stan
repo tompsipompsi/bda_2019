@@ -3,9 +3,6 @@ data {
   int<lower=0> N; // number of data points
   vector[N] x; // survival time
   vector[N] y; // size of the tumour
-  
-
-  //real xpred; // survival prediction
 }
 
 parameters {
