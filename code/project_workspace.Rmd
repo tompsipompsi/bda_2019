@@ -82,7 +82,7 @@ plot(data_extract$alpha, data_extract$beta, xlab = "Alpha", ylab = "Beta")
 abline(lm(data_extract$beta ~ data_extract$alpha), col = "red")
 ```
 
-The values seem to have a clear linear correlation.
+In the plot Alpha represents the time survived after the melanoma operation and Beta the thickness of the ulcer. The values seem to have a clear linear correlation in the way that those with smaller ulcers have lived longer after the operation.
 
 ## Diagnostics
 
@@ -91,12 +91,15 @@ Check convergence of chains:
 rstan::traceplot(fit_linear, pars=c('alpha','beta'))
 ```
 
+Although the scales are rather differing, the forms of the chains do behave a lot like one another.
+
 
 HMC diagnostics:
 ```{r}
 check_hmc_diagnostics(fit_linear)
 ```
 
+None of the HMC-test output values give warnings, which can be considered a positive trait.
 
 Rhat diagnostics:
 
@@ -104,7 +107,9 @@ Rhat diagnostics:
 rhat(fit_linear)
 ```
 
-From monitor, the effective sample size ESS can be seen.
+The alpha and beta values are remarcably close to one another, meaning the chains are well converged.
+
+From monitor, the effective sample size ESS can be seen:
 
 ```{r}
 monitor(fit_linear)
