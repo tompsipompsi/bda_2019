@@ -53,8 +53,7 @@ head(data_melanoma)
 ```
 
 ### Scatterplot
-=======
->>>>>>> Stashed changes
+
 Plot scatterplot with survival time and tumour thickness.
 ```{r}
 ggplot() +
