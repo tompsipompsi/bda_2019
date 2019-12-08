@@ -3,7 +3,7 @@ data {
   int<lower=0> N;
   vector[N] x;               //thickness
   int<lower=0,upper=1> y[N]; //status
-  real xpred;                //prediction
+  real xpred;                //thickness prediction
 }
 
 parameters {

@@ -35,9 +35,6 @@ Read data.
 ```{r}
 csv <- read.csv("../data/Melanoma.csv", header=TRUE)
 data_melanoma <- as.data.frame(csv)
-input <- list(N = nrow(data_melanoma),
-              x = data_melanoma$time,
-              y = data_melanoma$thickness)
 ```
 
 
@@ -57,6 +54,9 @@ head(data_melanoma)
 
 Plot scatterplot with survival time and tumour thickness.
 ```{r}
+input <- list(x = data_melanoma$time,
+              y = data_melanoma$thickness)
+
 ggplot() +
   geom_point(aes(x, y), data = data.frame(input), size = 1) +
   labs(y = 'Tumour thickness (cm)', x = 'Survival time (days)') +
@@ -73,7 +73,11 @@ writeLines(readLines("linear.stan"))
 ```
 
 ```{r}
-fit_linear <- stan(file='linear.stan', data=input, seed=SEED)
+input_linear <- list(N = nrow(data_melanoma),
+                     x = data_melanoma$time,
+                     y = data_melanoma$thickness,
+                     xpred = 2000)
+fit_linear <- stan(file='linear.stan', data=input_linear, seed=SEED)
 print(fit_linear)
 data_extract <- as.data.frame(fit_linear)
 ```
@@ -137,6 +141,10 @@ Plot posterior densities:
 stan_dens(fit_linear)
 ```
 
+
+### Posterior predictive checks
+
+In the figure above is plotted density of ypred where is the distribution of possible tumour sizes when the predicted survival time is 2000 days. The expected tumour size is about three centimeters.
 
 
 ## Bernoulli model
@@ -210,8 +218,8 @@ As can be seen from the beta, the expected probability of survival from melanoma
 
 ### Posterior predictive checks
 
-In the figure above is plotted density of ypred, which was predicted with the xpred = 16.
-16 in the top end of the 
+In the figure above is plotted density of ypred (status, 0=alive, 1=dead), which was predicted with the xpred = 16 (tumour thickness).
+16 in the top end of the tumour thickness. When we look at the ypred, it clearly shows that there is high chance of dying when the tumour thickness is that high, and low chance of survival. The x label represents the probability. From the prediction we can see that the model works as expected.
 
 
 ## Comparison of models
@@ -221,15 +229,15 @@ We used two different statistical models to analyze the data. Another was linear
 
 ## Conclusion
 
-These missing:
-Posterior predictive checking
-Predictive performance assessment if applicable (e.g. classification accuracy)
-Sensitivity analysis with respect to prior choices
-
-
 According to the data it can be concluded that the size of a tumor even if it is removed is in linear correlation with the patient having a shorter life span after the surgery. It can also be concluded that the size of the melanoma tumor has a correlation with the patient dying of cancer related reasons later on in life.
 
 ## Problems and potential improvements
 
-The data set used was rather old having being made in the 60s and 70s. Also the data set was not that large making the results a bit less reliable. To improve this analysis we recommend taking more data points that correspond to the situation with current medical technology. Also the data should be gathered from a larger area than just one university hospital.
+The data set used was rather old having being made in the 60s and 70s. Also the data set was not that large making the results a bit less reliable. To improve this analysis we recommend taking more data points that correspond to the situation with current medical technology. Also the data should be gathered from a larger area than just one university hospital. 
+
+To further improve the accuracy, other variables such as ulcer and age could be taken into account in the models. 
+
+Also normal distribution is not the best choice for this kind of data. The data does not follow normal distribution very well as can be seen from the scatter plot in the beginning of this report.
+
+In the linear regression posterior predictive checking the prediction is kind of "wrong way", because there is predicted the size of the tumour with the time. It should be other way around so that the survival time is predicted with the size of tumour.
 
