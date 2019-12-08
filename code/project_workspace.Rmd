@@ -69,7 +69,7 @@ ggplot() +
 
 ```{r}
 fit_linear <- stan(file='project.stan', data=input, seed=SEED)
-print(fit_melanoma)
+print(fit_linear)
 data_extract <- as.data.frame(fit_linear)
 ```
 
@@ -105,14 +105,9 @@ rhat(fit_linear)
 ```
 
 
-```{r}
-hist(data_extract$alpha)
-hist(data_extract$beta)
-```
-
 
 ```{r}
-shapiro.test(data_extract$alpha)
-shapiro.test(data_extract$sigma)
+monitor(fit_linear)
 ```
+
 
