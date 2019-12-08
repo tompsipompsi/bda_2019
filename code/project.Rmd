@@ -39,6 +39,7 @@ input <- list(N = nrow(data_melanoma),
               y = data_melanoma$thickness)
 ```
 
+<<<<<<< Updated upstream
 ### Quick glimpse inside the dataset
 
 Now to give you a rough understanding of what the data set looks like:
@@ -52,6 +53,8 @@ head(data_melanoma)
 ```
 
 ### Scatterplot
+=======
+>>>>>>> Stashed changes
 Plot scatterplot with survival time and tumour thickness.
 ```{r}
 ggplot() +
