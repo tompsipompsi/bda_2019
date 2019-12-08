@@ -68,6 +68,10 @@ ggplot() +
 ### Data
 
 ```{r}
+writeLines(readLines("linear.stan"))
+```
+
+```{r}
 fit_linear <- stan(file='linear.stan', data=input, seed=SEED)
 print(fit_linear)
 data_extract <- as.data.frame(fit_linear)
