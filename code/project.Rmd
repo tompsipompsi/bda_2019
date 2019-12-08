@@ -14,6 +14,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, echo=TRUE, include=FALSE}
 library(rstan)
+library(ggplot2)
+
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+Sys.setenv(LOCAL_CPPFLAGS = '-march=native')
+SEED <- 48927 # set random seed for reproducability
 ```
 
 
@@ -23,5 +29,30 @@ This project analyses the chance to survive maligant melanoma with the thickness
 
 ```{r}
 csv <- read.csv("../data/Melanoma.csv", header=TRUE)
-df <- as.data.frame(csv)
+data_melanoma <- as.data.frame(csv)
+#dead <- data_melanoma[data_melanoma$status == 1,]
+#alive <- data_melanoma[data_melanoma$status != 1,]
+input <- list(N = nrow(data_melanoma),
+              x = data_melanoma$time,
+              y = data_melanoma$thickness)
 ```
+
+```{r}
+ggplot() +
+  geom_point(aes(x, y), data = data.frame(input), size = 1) +
+  labs(y = 'Tumour thickness (cm)', x= 'Survival time (days)') +
+  guides(linetype = F)
+```
+
+
+```{r}
+fit_melanoma <- stan(file='project.stan', data=input, seed=SEED)
+print(fit_melanoma)
+```
+
+
+
+
+
+
+
