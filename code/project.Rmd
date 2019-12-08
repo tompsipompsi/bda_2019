@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo=TRUE, include=FALSE}
 library(rstan)
 library(ggplot2)
+library(bayesplot)
+theme_set(bayesplot::theme_default(base_family = "sans"))
 
 options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
@@ -30,8 +32,6 @@ This project analyses the chance to survive maligant melanoma with the thickness
 ```{r}
 csv <- read.csv("../data/Melanoma.csv", header=TRUE)
 data_melanoma <- as.data.frame(csv)
-#dead <- data_melanoma[data_melanoma$status == 1,]
-#alive <- data_melanoma[data_melanoma$status != 1,]
 input <- list(N = nrow(data_melanoma),
               x = data_melanoma$time,
               y = data_melanoma$thickness)
@@ -40,7 +40,7 @@ input <- list(N = nrow(data_melanoma),
 ```{r}
 ggplot() +
   geom_point(aes(x, y), data = data.frame(input), size = 1) +
-  labs(y = 'Tumour thickness (cm)', x= 'Survival time (days)') +
+  labs(y = 'Tumour thickness (cm)', x = 'Survival time (days)') +
   guides(linetype = F)
 ```
 
@@ -49,6 +49,41 @@ ggplot() +
 fit_melanoma <- stan(file='project.stan', data=input, seed=SEED)
 print(fit_melanoma)
 ```
+
+
+## Bernoulli model
+
+```{r}
+# 0 = dead, 1 = alive or died from other causes
+data_melanoma[data_melanoma$status == 1,]$status <- 0
+data_melanoma[data_melanoma$status == 2,]$status <- 1
+data_melanoma[data_melanoma$status == 3,]$status <- 1
+```
+
+```{r}
+input_bernoulli <- list(N = nrow(data_melanoma),
+                        x = data_melanoma$thickness,
+                        y = data_melanoma$status)
+fit_bernoulli <- stan(file='bernoulli.stan', data=input_bernoulli, seed=SEED)
+print(fit_bernoulli)
+```
+
+```{r}
+#monitor(fit_bernoulli, probs = c(0.1, 0.5, .9))
+draws <- as.data.frame(fit_bernoulli)
+mcmc_hist(draws, pars='alpha')
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
