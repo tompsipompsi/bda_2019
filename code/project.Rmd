@@ -218,9 +218,11 @@ These missing:
 Posterior predictive checking
 Predictive performance assessment if applicable (e.g. classification accuracy)
 Sensitivity analysis with respect to prior choices
-Discussion of problems, and potential improvements
 
 
+According to the data it can be concluded that the size of a tumor even if it is removed is in linear correlation with the patient having a shorter life span after the surgery. It can also be concluded that the size of the melanoma tumor has a correlation with the patient dying of cancer related reasons later on in life.
 
+## Problems and potential improvements
 
+The data set used was rather old having being made in the 60s and 70s. Also the data set was not that large making the results a bit less reliable. To improve this analysis we recommend taking more data points that correspond to the situation with current medical technology. Also the data should be gathered from a larger area than just one university hospital.
 
