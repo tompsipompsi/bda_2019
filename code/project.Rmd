@@ -157,7 +157,8 @@ Create input list and run the stan model.
 ```{r}
 input_bernoulli <- list(N = nrow(data_melanoma),
                         x = data_melanoma$thickness,
-                        y = data_melanoma$status)
+                        y = data_melanoma$status,
+                        xpred = 16)
 fit_bernoulli <- stan(file='bernoulli.stan', data=input_bernoulli, seed=SEED, iter=5000, warmup=500)
 print(fit_bernoulli)
 ```
@@ -205,6 +206,15 @@ stan_dens(fit_bernoulli)
 ```
 
 As can be seen from the beta, the expected probability of survival from melanoma is approximately 0.8 (chance of death is 0.2). It is dependant from the thickness of the tumour.
+
+
+### Posterior predictive checks
+
+Posterior predictive checks:
+```{r}
+ypred <- posterior_predict(fit_bernoulli, newdata = data.frame(status = 1))
+mcmc_hist(ypred) + xlab('avg-temperature prediction for the summer 2016')
+```
 
 
 ## Comparison of models
