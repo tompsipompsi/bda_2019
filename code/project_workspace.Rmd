@@ -104,10 +104,15 @@ Rhat diagnostics:
 rhat(fit_linear)
 ```
 
-
+From monitor, the effective sample size ESS can be seen.
 
 ```{r}
 monitor(fit_linear)
 ```
 
+Plot posterior densities:
+
+```{r}
+stan_dens(fit_linear)
+```
 
