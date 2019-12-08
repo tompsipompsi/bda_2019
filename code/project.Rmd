@@ -3,7 +3,7 @@ title: "BDA - Project"
 author: "Anonymous"
 output: 
   pdf_document: 
-    toc: yes
+    toc: no
     toc_depth: 1
 ---
 
@@ -15,8 +15,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo=TRUE, include=FALSE}
 library(rstan)
 library(ggplot2)
-library(bayesplot)
-theme_set(bayesplot::theme_default(base_family = "sans"))
 
 options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
@@ -41,6 +39,7 @@ input <- list(N = nrow(data_melanoma),
               y = data_melanoma$thickness)
 ```
 
+Plot scatterplot with survival time and tumour thickness.
 ```{r}
 ggplot() +
   geom_point(aes(x, y), data = data.frame(input), size = 1) +
@@ -78,6 +77,7 @@ fit_bernoulli <- stan(file='bernoulli.stan', data=input_bernoulli, seed=SEED, it
 print(fit_bernoulli)
 ```
 
+### Chain converging
 
 Check converge of chains:
 ```{r}
@@ -86,12 +86,16 @@ rstan::traceplot(fit_bernoulli, pars=c('alpha','beta'))
 
 Chains seems to be pretty well converged.
 
+### HMC diagnostics
 
 HMC diagnostics:
 ```{r}
 check_hmc_diagnostics(fit_bernoulli)
 ```
 
+None of the values gives any warnings, so everything went well in the fitting.
+
+### Rhat
 
 Rhat diagnostics:
 ```{r}
@@ -100,12 +104,15 @@ rhat(fit_bernoulli)
 
 Rhats are very close to one, so the chains are well converged.
 
+### ESS -values
 
 From monitor -function we can see the effective sample sizes (ESS -values).
 ```{r}
-monitor(fit_bernoulli)
+monitor(fit_bernoulli, warmup = 500)
 ```
 
+
+### Posterior densities
 
 Plot posterior densities:
 ```{r}
@@ -115,12 +122,18 @@ stan_dens(fit_bernoulli)
 As can be seen from the beta, the expected probability of survival from melanoma is approximately 0.8 (chance of death is 0.2). It is dependant from the thickness of the tumour.
 
 
+## Comparison of models
+
+We used two different statistical models to analyze the data. Another was linear regression and another was bernoulli model. In these two models we approached the dataset in a bit different way. In linear regression we used variables: survival time and tumour thickness to predict the survival time when the tumour thickness is known. In bernoulli model we used status and thickness to predict the probability of death when the tumour thickness is known. They both measure the same thing in the end, which is survivability, but they address the problem in a different way and using partly different variables.
+
+
 ## Conclusion
 
-
-
-
-
+These missing:
+Posterior predictive checking
+Predictive performance assessment if applicable (e.g. classification accuracy)
+Sensitivity analysis with respect to prior choices
+Discussion of problems, and potential improvements
 
 
 
